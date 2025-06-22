@@ -20,6 +20,6 @@ pip install -r requirements.txt
 python scrape_siggraph2025.py
 ```
 
-The scraped papers will be saved to `papers.json` in JSON format. Each entry
+The scraped papers will be saved to `data/papers.json` in JSON format. Each entry
 includes the paper's title, authors, schedule information, and a link to its
 dedicated presentation page on the SIGGRAPH site.

@@ -1,4 +1,5 @@
 import json
+import os
 from urllib.parse import urljoin
 
 import requests
@@ -150,11 +151,15 @@ def scrape_technical_papers() -> List[Dict[str, str]]:
 
 def save_as_json(data: List[Dict[str, str]], path: str) -> None:
     """Save scraped data as JSON."""
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 if __name__ == "__main__":
     papers = scrape_technical_papers()
-    save_as_json(papers, "papers.json")
-    print(f"Saved {len(papers)} papers to papers.json")
+    output_path = os.path.join("data", "papers.json")
+    save_as_json(papers, output_path)
+    print(f"Saved {len(papers)} papers to {output_path}")
