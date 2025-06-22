@@ -32,6 +32,10 @@ def fetch_page(url: str) -> BeautifulSoup:
     """Fetch a page and return its BeautifulSoup object."""
     resp = SESSION.get(url, timeout=REQUEST_TIMEOUT)
     resp.raise_for_status()
+    # Snippet pages are served without an explicit charset and default to
+    # ISO-8859-1 in ``requests``. Force UTF-8 so characters like en-dashes do
+    # not get decoded as "\xc2" (displayed as "\xc2").
+    resp.encoding = "utf-8"
     return BeautifulSoup(resp.text, "html.parser")
 
 
@@ -133,6 +137,9 @@ def parse_technical_papers(base_soup: BeautifulSoup) -> List[Dict[str, str]]:
         try:
             resp = SESSION.get(link, timeout=REQUEST_TIMEOUT)
             resp.raise_for_status()
+            # Snippet responses omit the charset and default to ISO-8859-1; fix
+            # it so we do not get stray characters in titles.
+            resp.encoding = "utf-8"
         except requests.HTTPError:
             # Skip snippets that fail to load
             continue
