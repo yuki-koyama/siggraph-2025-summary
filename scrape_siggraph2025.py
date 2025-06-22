@@ -3,7 +3,9 @@ from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
-from typing import List, Dict
+from typing import List, Dict, Tuple
+from concurrent.futures import ThreadPoolExecutor
+import time
 
 # Session titles to exclude even though they are labeled as Technical Papers
 EXCLUDE_TITLES = {
@@ -20,12 +22,33 @@ def normalize_title(title: str) -> str:
 
 BASE_URL = "https://s2025.conference-schedule.org/"
 
+# Reuse a session for all HTTP requests
+SESSION = requests.Session()
+SESSION.headers.update({"User-Agent": "siggraph-scraper"})
+REQUEST_TIMEOUT = 10
+
 
 def fetch_page(url: str) -> BeautifulSoup:
     """Fetch a page and return its BeautifulSoup object."""
-    resp = requests.get(url)
+    resp = SESSION.get(url, timeout=REQUEST_TIMEOUT)
     resp.raise_for_status()
     return BeautifulSoup(resp.text, "html.parser")
+
+
+def fetch_paper_details(url: str) -> Tuple[str, str]:
+    """Fetch a paper presentation page and return its description and image URL."""
+    try:
+        soup = fetch_page(url)
+    except requests.RequestException:
+        return "", ""
+
+    img_el = soup.find("img", class_="representative-img")
+    img_url = urljoin(BASE_URL, img_el.get("src", "")) if img_el else ""
+
+    abstract_el = soup.find("span", class_="abstract")
+    description = abstract_el.get_text(strip=True) if abstract_el else ""
+
+    return description, img_url
 
 
 def parse_snippet_links(soup: BeautifulSoup) -> List[str]:
@@ -65,6 +88,7 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
         }
 
     papers: List[Dict[str, str]] = []
+    detail_urls: List[str] = []
     for row in soup.find_all("tr", class_="agenda-item"):
         psid = row.get("psid")
         ssid = row.get("ssid")
@@ -89,6 +113,16 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
             "start": row.get("s_utc", ""),
             "end": row.get("e_utc", ""),
         })
+        detail_urls.append(url)
+
+    # Fetch each paper's details concurrently
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        details = list(ex.map(fetch_paper_details, detail_urls))
+
+    for paper, (description, image_url) in zip(papers, details):
+        paper["description"] = description
+        paper["image_url"] = image_url
+
     return papers
 
 
@@ -97,12 +131,13 @@ def parse_technical_papers(base_soup: BeautifulSoup) -> List[Dict[str, str]]:
     papers: List[Dict[str, str]] = []
     for link in parse_snippet_links(base_soup):
         try:
-            resp = requests.get(link)
+            resp = SESSION.get(link, timeout=REQUEST_TIMEOUT)
             resp.raise_for_status()
         except requests.HTTPError:
             # Skip snippets that fail to load
             continue
         papers.extend(parse_snippet(resp.text))
+        time.sleep(0.1)
     return papers
 
 
