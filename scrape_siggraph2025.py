@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from typing import List, Dict, Tuple
 from concurrent.futures import ThreadPoolExecutor
+from tqdm import tqdm
 import time
 
 # Session titles to exclude even though they are labeled as Technical Papers
@@ -115,9 +116,11 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
         })
         detail_urls.append(url)
 
-    # Fetch each paper's details concurrently
+    # Fetch each paper's details concurrently with a progress bar
     with ThreadPoolExecutor(max_workers=8) as ex:
-        details = list(ex.map(fetch_paper_details, detail_urls))
+        details = list(tqdm(ex.map(fetch_paper_details, detail_urls),
+                           total=len(detail_urls),
+                           desc="Fetching paper details"))
 
     for paper, (description, image_url) in zip(papers, details):
         paper["description"] = description
@@ -129,7 +132,8 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
 def parse_technical_papers(base_soup: BeautifulSoup) -> List[Dict[str, str]]:
     """Parse the main schedule page and all snippet pages."""
     papers: List[Dict[str, str]] = []
-    for link in parse_snippet_links(base_soup):
+    links = parse_snippet_links(base_soup)
+    for link in tqdm(links, desc="Fetching schedule snippets"):
         try:
             resp = SESSION.get(link, timeout=REQUEST_TIMEOUT)
             resp.raise_for_status()
