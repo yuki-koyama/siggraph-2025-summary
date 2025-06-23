@@ -12,22 +12,24 @@ html(lang="ja")
   body
     .container
       h1.mb-4 SIGGRAPH 2025 Technical Papers
-      each session in sessions
-        h2.mt-4.mb-3= session.name
-        each paper in session.papers
-          .card.mb-4
-            .row.g-0
-              if paper.image_file
-                .col-md-3
-                  img.img-fluid.rounded-start(src="../data/images/" + paper.image_file, alt=paper.title)
-              .col-md-9
-                .card-body
-                  h5.card-title= paper.title
-                  p.card-text
-                    | #{paper.authors.join(', ')}
-                  if paper.affiliations
-                    p.card-text.text-muted= paper.affiliations.join(', ')
-                  if paper.image_url
+        each session in sessions
+          h1.mt-4.mb-3= session.name
+          each paper in session.papers
+            .card.mb-4
+              .row.g-0
+                if paper.image_file
+                  .col-md-3
+                    img.img-fluid.rounded-start(src="../data/images/" + paper.image_file, alt=paper.title)
+                .col-md-9
+                  .card-body
+                    h5.card-title= paper.title
                     p.card-text
-                      small.text-body-secondary 画像出典：
-                      a(href=paper.image_url)= paper.image_url
+                      | #{paper.authors.join(', ')}
+                    if paper.affiliations
+                      p.card-text.text-muted= paper.affiliations.join(', ')
+                    if paper.description
+                      p.card-text= paper.description
+                    if paper.image_url
+                      p.card-text
+                        small.text-body-secondary 画像出典：
+                        a(href=paper.image_url) リンク
