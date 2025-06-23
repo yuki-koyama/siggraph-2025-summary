@@ -11,11 +11,11 @@ html(lang="ja")
     title SIGGRAPH 2025 Technical Papers
   body
     .container
-      h1.mb-4 SIGGRAPH 2025 Technical Papers
+      h1.mb-4.fw-bold SIGGRAPH 2025 Technical Papers
       each session in sessions
-        h2.mt-4.mb-3= session.name
+        h2.mt-4.mb-3.fw-bold= session.name
         each paper in session.papers
-          .card.mb-4
+          .card.mb-4.border-0
             .row.g-0
               if paper.image_file
                 .col-auto
@@ -23,17 +23,18 @@ html(lang="ja")
                     img(src="../data/images/" + paper.image_file, alt=paper.title)
               .col
                 .card-body
-                  h5.card-title= paper.title
-                  p.card-text
-                    - var authorStrings = [];
+                  h5.card-title.fw-bold= paper.title
+                  ul.author-list.list-unstyled.card-text.mb-2
                     - for(var i = 0; i < paper.authors.length; i++) {
-                    -   var affs = (paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length) ? ' (' + paper.affiliations[i].join(', ') + ')' : '';
-                    -   authorStrings.push(paper.authors[i] + affs);
+                      li
+                        | #{paper.authors[i]}
+                        if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
+                          small.text-body-secondary.ms-1
+                            | (#{paper.affiliations[i].join(', ')})
                     - }
-                    | #{authorStrings.join(', ')}
                   if paper.description
                     p.card-text= paper.description
-                  if paper.image_url
-                    p.card-text
-                      small.text-body-secondary 画像出典：
-                      a(href=paper.image_url target="_blank") リンク
+                  p.card-text
+                    small.text-body-secondary
+                      | Source:
+                      a.ms-1(href=paper.url target="_blank") Link
