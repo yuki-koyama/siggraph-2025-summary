@@ -1,6 +1,6 @@
 import json
 import os
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, parse_qs
 
 import requests
 from bs4 import BeautifulSoup
@@ -143,6 +143,14 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
             continue
         title = normalize_title(title_link.get_text(strip=True))
         url = urljoin(BASE_URL, title_link.get("href", ""))
+
+        # Exclude interactive discussions and miscellaneous schedule items
+        if "Interactive Discussion" in title:
+            continue
+        qs = parse_qs(urlparse(url).query)
+        paper_id_val = qs.get("id", [""])[0]
+        if paper_id_val.startswith("misc_"):
+            continue
 
         author_links = row.find_all("a", attrs={"data-link-type": lambda x: x and ".person" in x})
         authors = [normalize_title(a.get_text(strip=True)) for a in author_links]
