@@ -21,5 +21,7 @@ python scrape_siggraph2025.py
 ```
 
 The scraped papers will be saved to `data/papers.json` in JSON format. Each entry
-includes the paper's title, authors, schedule information, and a link to its
-dedicated presentation page on the SIGGRAPH site.
+includes the paper's title, authors, session and paper IDs, schedule information,
+and a link to its dedicated presentation page on the SIGGRAPH site. The
+representative images for each paper are downloaded to `data/images/` and the
+JSON file stores both the original image URL and the saved image filename.
