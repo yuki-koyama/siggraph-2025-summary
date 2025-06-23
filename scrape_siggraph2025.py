@@ -44,12 +44,13 @@ def fetch_page(url: str) -> BeautifulSoup:
     return BeautifulSoup(resp.text, "html.parser")
 
 
-def fetch_paper_details(url: str) -> Tuple[str, str]:
-    """Fetch a paper presentation page and return its description and image URL."""
+def fetch_paper_details(url: str) -> Tuple[str, str, List[List[str]]]:
+    """Fetch a paper presentation page and return its description, image URL, and
+    author affiliations."""
     try:
         soup = fetch_page(url)
     except requests.RequestException:
-        return "", ""
+        return "", "", []
 
     img_el = soup.find("img", class_="representative-img")
     img_url = urljoin(BASE_URL, img_el.get("src", "")) if img_el else ""
@@ -57,7 +58,15 @@ def fetch_paper_details(url: str) -> Tuple[str, str]:
     abstract_el = soup.find("span", class_="abstract")
     description = abstract_el.get_text(strip=True) if abstract_el else ""
 
-    return description, img_url
+    affiliations: List[List[str]] = []
+    for presenter in soup.find_all("div", class_="presenter-details"):
+        inst_links = presenter.find_all(
+            "a", attrs={"data-link-type": "presentation.person.institution"}
+        )
+        insts = [a.get_text(strip=True) for a in inst_links]
+        affiliations.append(insts)
+
+    return description, img_url, affiliations
 
 
 def _download_image(paper: Dict[str, str], dest_dir: str) -> str:
@@ -166,9 +175,11 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
                            total=len(detail_urls),
                            desc="Fetching paper details"))
 
-    for paper, (description, image_url) in zip(papers, details):
+    for paper, (description, image_url, affiliations) in zip(papers, details):
         paper["description"] = description
         paper["image_url"] = image_url
+        if affiliations:
+            paper["affiliations"] = affiliations
 
     return papers
 
