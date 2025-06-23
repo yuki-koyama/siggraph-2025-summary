@@ -13,7 +13,11 @@ async function build() {
     sessionsMap.get(name).push(paper);
   }
   const sessions = Array.from(sessionsMap, ([name, papers]) => ({ name, papers }));
-  const html = pug.renderFile('src/templates/index.pug', { sessions });
+  // Render Pug template with pretty formatting so the resulting HTML is more readable
+  const html = pug.renderFile('src/templates/index.pug', {
+    sessions,
+    pretty: true,
+  });
   await fs.ensureDir('dist');
   await fs.writeFile('dist/index.html', html);
 }
