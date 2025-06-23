@@ -11,10 +11,21 @@ html(lang="en")
     title SIGGRAPH 2025 Technical Papers
   body
     .container
-      h1.mb-4.fw-bold SIGGRAPH 2025 Technical Papers
-      each session in sessions
-        h2.session-title.mt-5.mb-4.fw-bold
-          | #{session.name}
+      //- Page title in a simple jumbotron style
+      .p-5.mb-4.bg-light.rounded-3
+        h1.display-5.fw-bold SIGGRAPH 2025 Technical Papers
+
+      //- Table of contents linking to each session
+      if sessions.length
+        nav.mb-5
+          ul.list-unstyled
+            each session, idx in sessions
+              li.mb-1
+                a(href="#session-#{idx + 1}") #{idx + 1}. #{session.name}
+
+      each session, sidx in sessions
+        h2.session-title.mt-5.mb-4.fw-bold(id="session-#{sidx + 1}")
+          | #{sidx + 1}. #{session.name}
         each paper, idx in session.papers
           .card.mb-4.border-0
             .row.g-0
