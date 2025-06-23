@@ -18,9 +18,10 @@ html(lang="ja")
           .card.mb-4
             .row.g-0
               if paper.image_file
-                .col-md-3
-                  img.img-fluid.rounded-start(src="../data/images/" + paper.image_file, alt=paper.title)
-              .col-md-9
+                .col-auto
+                  .image-wrapper.rounded-start
+                    img(src="../data/images/" + paper.image_file, alt=paper.title)
+              .col
                 .card-body
                   h5.card-title= paper.title
                   p.card-text
