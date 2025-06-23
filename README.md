@@ -25,3 +25,14 @@ includes the paper's title, authors, session and paper IDs, schedule information
 and a link to its dedicated presentation page on the SIGGRAPH site. The
 representative images for each paper are downloaded to `data/images/` and the
 JSON file stores both the original image URL and the saved image filename.
+
+## Building the HTML summary
+
+After scraping the data, install the Node.js dependencies and generate the web page:
+
+```bash
+npm install
+npm run build
+```
+
+The generated HTML (`dist/index.html`) references the scraped images under `data/images/` and lists the technical papers grouped by session.

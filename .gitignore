@@ -195,3 +195,5 @@ cython_debug/
 
 # Output directory for scraped data
 data/
+node_modules/
+dist/

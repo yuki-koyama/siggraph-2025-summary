@@ -1,0 +1,21 @@
+{
+  "name": "siggraph-2025-summary",
+  "version": "1.0.0",
+  "description": "This repository contains a simple scraper for the SIGGRAPH 2025 conference schedule. The script `scrape_siggraph2025.py` downloads the schedule from the official website and extracts information about individual **Technical Papers** by parsing the daily schedule snippets. The parser walks through each technical paper session and collects the presentations within it. Sessions such as \"Papers Fast Forward\", \"SIGGRAPH 2025 Technical Papers Town Hall\", and \"Technical Papers Closing Session\" are excluded from the results.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:pug": "node scripts/build.js",
+    "build:sass": "sass src/styles/main.scss dist/main.css",
+    "build": "npm run build:pug && npm run build:sass"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "fs-extra": "^11.3.0",
+    "pug": "^3.0.3",
+    "sass": "^1.89.2"
+  }
+}
