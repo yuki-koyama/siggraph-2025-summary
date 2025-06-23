@@ -1,6 +1,6 @@
 import json
 import os
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -29,6 +29,9 @@ SESSION = requests.Session()
 SESSION.headers.update({"User-Agent": "siggraph-scraper"})
 REQUEST_TIMEOUT = 10
 
+# Directory for downloaded representative images
+IMAGES_DIR = os.path.join("data", "images")
+
 
 def fetch_page(url: str) -> BeautifulSoup:
     """Fetch a page and return its BeautifulSoup object."""
@@ -55,6 +58,40 @@ def fetch_paper_details(url: str) -> Tuple[str, str]:
     description = abstract_el.get_text(strip=True) if abstract_el else ""
 
     return description, img_url
+
+
+def _download_image(paper: Dict[str, str], dest_dir: str) -> str:
+    """Download a representative image and return the filename."""
+    url = paper.get("image_url")
+    paper_id = paper.get("paper_id")
+    if not url or not paper_id:
+        return ""
+
+    ext = os.path.splitext(urlparse(url).path)[1]
+    if not ext:
+        ext = ".jpg"
+    filename = f"{paper_id}{ext}"
+    path = os.path.join(dest_dir, filename)
+
+    try:
+        resp = SESSION.get(url, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        with open(path, "wb") as f:
+            f.write(resp.content)
+    except requests.RequestException:
+        return ""
+    return filename
+
+
+def download_images(papers: List[Dict[str, str]], dest_dir: str) -> None:
+    """Download representative images for all papers."""
+    os.makedirs(dest_dir, exist_ok=True)
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        filenames = list(tqdm(ex.map(lambda p: _download_image(p, dest_dir), papers),
+                             total=len(papers),
+                             desc="Downloading images"))
+    for paper, fname in zip(papers, filenames):
+        paper["image_file"] = fname
 
 
 def parse_snippet_links(soup: BeautifulSoup) -> List[str]:
@@ -111,6 +148,8 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
         authors = [normalize_title(a.get_text(strip=True)) for a in author_links]
 
         papers.append({
+            "paper_id": ssid,
+            "session_id": psid,
             "title": title,
             "url": url,
             "authors": authors,
@@ -157,6 +196,7 @@ def scrape_technical_papers() -> List[Dict[str, str]]:
     """Scrape the schedule site for technical papers."""
     soup = fetch_page(BASE_URL)
     papers = parse_technical_papers(soup)
+    download_images(papers, IMAGES_DIR)
     return papers
 
 
