@@ -31,7 +31,9 @@ html(lang="ja")
                     -   authorStrings.push(paper.authors[i] + affs);
                     - }
                     | #{authorStrings.join(', ')}
+                  if paper.description
+                    p.card-text= paper.description
                   if paper.image_url
                     p.card-text
                       small.text-body-secondary 画像出典：
-                      a(href=paper.image_url)= paper.image_url
+                      a(href=paper.image_url target="_blank") リンク
