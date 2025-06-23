@@ -24,9 +24,12 @@ html(lang="ja")
                 .card-body
                   h5.card-title= paper.title
                   p.card-text
-                    | #{paper.authors.join(', ')}
-                  if paper.affiliations
-                    p.card-text.text-muted= paper.affiliations.join(', ')
+                    - var authorStrings = [];
+                    - for(var i = 0; i < paper.authors.length; i++) {
+                    -   var affs = (paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length) ? ' (' + paper.affiliations[i].join(', ') + ')' : '';
+                    -   authorStrings.push(paper.authors[i] + affs);
+                    - }
+                    | #{authorStrings.join(', ')}
                   if paper.image_url
                     p.card-text
                       small.text-body-secondary 画像出典：
