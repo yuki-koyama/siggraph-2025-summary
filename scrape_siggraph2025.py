@@ -208,7 +208,16 @@ def parse_technical_papers(base_soup: BeautifulSoup) -> List[Dict[str, str]]:
             continue
         papers.extend(parse_snippet(resp.text))
         time.sleep(0.1)
-    return papers
+
+    # Deduplicate papers by paper_id because each schedule snippet lists
+    # every presentation multiple times (e.g., different time zones).
+    unique: Dict[str, Dict[str, str]] = {}
+    for paper in papers:
+        pid = paper.get("paper_id")
+        if pid and pid not in unique:
+            unique[pid] = paper
+
+    return list(unique.values())
 
 
 def scrape_technical_papers() -> List[Dict[str, str]]:
