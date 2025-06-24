@@ -10,7 +10,8 @@
     "build": "npm run build:pug && npm run build:sass",
     "build:slides-pug": "node scripts/build-slides.js",
     "build:slides-sass": "sass src/styles/slides.scss dist/slides.css",
-    "build:slides": "npm run build:slides-pug && npm run build:slides-sass"
+    "build:slides": "npm run build:slides-pug && npm run build:slides-sass",
+    "build:slides-pdf": "node scripts/build-pdf.js"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
   "dependencies": {
     "fs-extra": "^11.3.0",
     "pug": "^3.0.3",
+    "puppeteer": "^24.10.2",
     "sass": "^1.89.2"
   }
 }

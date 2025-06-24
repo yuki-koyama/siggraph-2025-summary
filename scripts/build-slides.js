@@ -12,8 +12,12 @@ async function build() {
     sessionsMap.get(name).push(paper);
   }
   const sessions = Array.from(sessionsMap, ([name, papers]) => ({ name, papers }));
+  const sessionCount = sessions.length;
+  const paperCount = data.length;
   const html = pug.renderFile('src/templates/slides.pug', {
     sessions,
+    sessionCount,
+    paperCount,
     pretty: true,
   });
   await fs.ensureDir('dist');
