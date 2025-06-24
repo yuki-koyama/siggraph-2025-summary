@@ -11,9 +11,12 @@ html(lang="en")
   body
     section.slide.title
       h1 SIGGRAPH 2025 Technical Papers
-    each session in sessions
+      p.source
+        | Source:
+        a.ms-1(href="https://s2025.conference-schedule.org/" target="_blank") s2025.conference-schedule.org
+    each session, sidx in sessions
       section.slide.session-title
-        h1= session.name
+        h1 #{sidx + 1}. #{session.name}
       each paper in session.papers
         section.slide.paper(class=paper.image_file ? '' : 'no-image')
           if paper.image_file
@@ -24,9 +27,9 @@ html(lang="en")
             ul.author-list
               - for(var i = 0; i < paper.authors.length; i++) {
                 li
-                  | #{paper.authors[i]}
+                  = paper.authors[i] + ' '
                   if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
-                    small.affiliation.text-body-secondary.ms-1
+                    small.affiliation.text-body-secondary
                       | (#{paper.affiliations[i].join(', ')})
               - }
             if paper.description
