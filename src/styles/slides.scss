@@ -20,6 +20,16 @@ body {
   padding: 2rem;
 }
 
+.title {
+  background: linear-gradient(135deg, #6f42c1, #5c6df2);
+  color: #fff;
+}
+
+.title h1 {
+  font-size: 3rem;
+  text-align: center;
+}
+
 .session-title {
   background: linear-gradient(135deg, #6f42c1, #5c6df2);
   color: #fff;
@@ -30,24 +40,66 @@ body {
   text-align: center;
 }
 
+.paper {
+  flex-direction: row;
+}
+
+.paper .text-column,
+.paper .image-column {
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.paper .text-column {
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .paper-title {
   font-size: 2rem;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
   margin-bottom: 1rem;
+}
+
+.author-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.author-list li {
+  margin-bottom: 0.25rem;
+}
+
+.author-list li .affiliation {
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
 
 .authors {
   margin-bottom: 1rem;
-  text-align: center;
+  text-align: left;
 }
 
 .paper-image {
-  max-width: 80%;
-  max-height: 50%;
-  margin-bottom: 1rem;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.paper.no-image .text-column {
+  width: 100%;
+  padding-right: 0;
+}
+
+.paper .image-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .description {
-  text-align: center;
+  text-align: left;
 }

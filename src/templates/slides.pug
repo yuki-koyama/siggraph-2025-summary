@@ -9,14 +9,25 @@ html(lang="en")
     link(rel="stylesheet", href="./slides.css")
     title SIGGRAPH 2025 Technical Papers Slides
   body
+    section.slide.title
+      h1 SIGGRAPH 2025 Technical Papers
     each session in sessions
       section.slide.session-title
         h1= session.name
       each paper in session.papers
-        section.slide.paper
+        section.slide.paper(class=paper.image_file ? '' : 'no-image')
           if paper.image_file
-            img.paper-image(src="../data/images/" + paper.image_file, alt=paper.title)
-          h2.paper-title= paper.title
-          p.authors= paper.authors.join(', ')
-          if paper.description
-            p.description= paper.description
+            .image-column
+              img.paper-image(src="../data/images/" + paper.image_file, alt=paper.title)
+          .text-column
+            h2.paper-title= paper.title
+            ul.author-list
+              - for(var i = 0; i < paper.authors.length; i++) {
+                li
+                  | #{paper.authors[i]}
+                  if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
+                    small.affiliation.text-body-secondary.ms-1
+                      | (#{paper.affiliations[i].join(', ')})
+              - }
+            if paper.description
+              p.description= paper.description

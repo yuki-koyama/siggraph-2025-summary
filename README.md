@@ -45,4 +45,11 @@ You can also generate a slide-style HTML file where each page corresponds to a s
 npm run build:slides
 ```
 
-This produces `dist/slides.html` and `dist/slides.css`. Open `slides.html` in a modern browser and use the **Print** dialog to export a PDF. Set the paper size to `1280x720` (16:9) and disable headers, footers, and margins for best results.
+This produces `dist/slides.html` and `dist/slides.css`.
+To automatically save a PDF version of the slides, run:
+
+```bash
+npm run build:slides-pdf
+```
+
+The script outputs `dist/slides.pdf` using Puppeteer with a page size of `1280x720`.
