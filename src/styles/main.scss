@@ -6,7 +6,7 @@ body {
 .jumbotron {
   background: linear-gradient(135deg, #6f42c1, #5c6df2);
   color: #fff;
-  padding: 4rem 2rem;
+  padding: 6rem 2rem;
 }
 
 .session-title {}
@@ -29,5 +29,10 @@ body {
   background-color: #343a40;
   color: #fff;
   text-align: center;
-  padding: 2rem 0;
+  padding: 3rem 0;
+  font-size: 0.875rem;
+}
+
+.footer a {
+  color: #ffc107;
 }
