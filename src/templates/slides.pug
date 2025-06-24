@@ -21,7 +21,7 @@ html(lang="en")
         section.slide.paper(class=paper.image_file ? '' : 'no-image')
           if paper.image_file
             .image-column
-              img.paper-image(src="../data/images/" + paper.image_file, alt=paper.title)
+              img.paper-image(src="images/" + paper.image_file, alt=paper.title)
           .text-column
             h2.paper-title= paper.title
             ul.author-list

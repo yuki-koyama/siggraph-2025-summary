@@ -30,7 +30,7 @@ SESSION.headers.update({"User-Agent": "siggraph-scraper"})
 REQUEST_TIMEOUT = 10
 
 # Directory for downloaded representative images
-IMAGES_DIR = os.path.join("data", "images")
+IMAGES_DIR = os.path.join("dist", "images")
 
 
 def fetch_page(url: str) -> BeautifulSoup:
@@ -239,6 +239,6 @@ def save_as_json(data: List[Dict[str, str]], path: str) -> None:
 
 if __name__ == "__main__":
     papers = scrape_technical_papers()
-    output_path = os.path.join("data", "papers.json")
+    output_path = os.path.join("dist", "papers.json")
     save_as_json(papers, output_path)
     print(f"Saved {len(papers)} papers to {output_path}")

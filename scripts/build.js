@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const pug = require('pug');
 
 async function build() {
-  const data = await fs.readJson('data/papers.json').catch(() => []);
+  const data = await fs.readJson('dist/papers.json').catch(() => []);
   // Group papers by session title
   const sessionsMap = new Map();
   for (const paper of data) {
