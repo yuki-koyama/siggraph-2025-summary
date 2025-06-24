@@ -11,42 +11,44 @@ html(lang="en")
     title SIGGRAPH 2025 Technical Papers
   body
     //- Full-width jumbotron style header
-    header.jumbotron.text-center.mb-5
-      h1.display-4.fw-bold SIGGRAPH 2025 Technical Papers
+    header.jumbotron.mb-5
+      .container.text-center
+        h1.display-4.fw-bold SIGGRAPH 2025 Technical Papers
 
-    //- Table of contents linking to each session
-    if sessions.length
-      h2.mb-3.fw-bold Table of Contents
-      nav.mb-5
-        ul.list-unstyled
-          each session, idx in sessions
-            li.mb-1
-              a(href="#session-" + (idx + 1)) #{idx + 1}. #{session.name}
+    main.container
+      //- Table of contents linking to each session
+      if sessions.length
+        h2.mb-3.fw-bold Table of Contents
+        nav.mb-5
+          ul.list-unstyled
+            each session, idx in sessions
+              li.mb-1
+                a(href="#session-" + (idx + 1)) #{idx + 1}. #{session.name}
 
-    each session, sidx in sessions
-      h2.session-title.mt-5.mb-4.fw-bold(id="session-" + (sidx + 1))
-        | #{sidx + 1}. #{session.name}
-      each paper, idx in session.papers
-        .card.mb-4.border-0
-          .row.g-0
-            .col
-              .card-body
-                h5.card-title.fw-bold= paper.title
-                ul.author-list.list-unstyled.card-text.mb-2
-                  - for(var i = 0; i < paper.authors.length; i++) {
-                    li
-                      | #{paper.authors[i]}
-                      if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
-                        small.text-body-secondary.ms-1
-                          | (#{paper.affiliations[i].join(', ')})
-                  - }
-                if paper.description
-                  p.card-text= paper.description
-                p.card-text
-                  small.text-body-secondary
-                    | Source:
-                    a.ms-1(href=paper.url target="_blank") Link
-            if paper.image_file
-              .col-auto
-                .image-wrapper.rounded-end.m-3
-                  img(src="../data/images/" + paper.image_file, alt=paper.title)
+      each session, sidx in sessions
+        h2.session-title.mt-5.mb-4.fw-bold(id="session-" + (sidx + 1))
+          | #{sidx + 1}. #{session.name}
+        each paper, idx in session.papers
+          .card.mb-4.border-0
+            .row.g-0
+              .col
+                .card-body
+                  h5.card-title.fw-bold= paper.title
+                  ul.author-list.list-unstyled.card-text.mb-2
+                    - for(var i = 0; i < paper.authors.length; i++) {
+                      li
+                        | #{paper.authors[i]}
+                        if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
+                          small.text-body-secondary.ms-1
+                            | (#{paper.affiliations[i].join(', ')})
+                    - }
+                  if paper.description
+                    p.card-text= paper.description
+                  p.card-text
+                    small.text-body-secondary
+                      | Source:
+                      a.ms-1(href=paper.url target="_blank") Link
+              if paper.image_file
+                .col-auto
+                  .image-wrapper.rounded-end.m-3
+                    img(src="../data/images/" + paper.image_file, alt=paper.title)
