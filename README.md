@@ -39,7 +39,7 @@ The generated HTML (`dist/index.html`) references the scraped images under `data
 
 ## Building slide deck
 
-You can also generate a slide-style HTML file. The deck begins with a title slide (including the schedule source), followed by numbered session title pages and individual paper slides. Install the dependencies as above and run:
+You can also generate a slide-style HTML file. The deck begins with a title slide showing the source and the counts for sessions and papers, followed by numbered session title pages and individual paper slides. Install the dependencies as above and run:
 
 ```bash
 npm run build:slides
