@@ -15,6 +15,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
   page-break-after: always;
   box-sizing: border-box;
   padding: 2rem;
@@ -23,11 +24,18 @@ body {
 .title {
   background: linear-gradient(135deg, #6f42c1, #5c6df2);
   color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .title .source {
-  margin-top: 1rem;
-  font-size: 0.875rem;
+  position: absolute;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+  font-size: 0.75rem;
   text-align: center;
 }
 
@@ -36,13 +44,14 @@ body {
 }
 
 .title .stats {
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
   text-align: center;
 }
 
 .title h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   text-align: center;
 }
 

@@ -11,10 +11,9 @@ html(lang="en")
   body
     section.slide.title
       h1 SIGGRAPH 2025 Technical Papers
-      p.source Source: #[a.source-link(href="https://s2025.conference-schedule.org/" target="_blank") s2025.conference-schedule.org]
       if typeof sessionCount !== 'undefined' && typeof paperCount !== 'undefined'
-        p.stats
-          small #Sessions: #{sessionCount}, #Papers: #{paperCount}
+        p.stats #Sessions: #{sessionCount}, #Papers: #{paperCount}
+      p.source Source: #[a.source-link(href="https://s2025.conference-schedule.org/" target="_blank") s2025.conference-schedule.org]
     each session, sidx in sessions
       section.slide.session-title
         h1 #{sidx + 1}. #{session.name}
