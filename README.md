@@ -36,3 +36,13 @@ npm run build
 ```
 
 The generated HTML (`dist/index.html`) references the scraped images under `data/images/` and lists the technical papers grouped by session.
+
+## Building slide deck
+
+You can also generate a slide-style HTML file where each page corresponds to a single paper and session title pages are inserted between sessions. Install the dependencies as above and run:
+
+```bash
+npm run build:slides
+```
+
+This produces `dist/slides.html` and `dist/slides.css`. Open `slides.html` in a modern browser and use the **Print** dialog to export a PDF. Set the paper size to `1280x720` (16:9) and disable headers, footers, and margins for best results.

@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:pug": "node scripts/build.js",
     "build:sass": "sass src/styles/main.scss dist/main.css",
-    "build": "npm run build:pug && npm run build:sass"
+    "build": "npm run build:pug && npm run build:sass",
+    "build:slides-pug": "node scripts/build-slides.js",
+    "build:slides-sass": "sass src/styles/slides.scss dist/slides.css",
+    "build:slides": "npm run build:slides-pug && npm run build:slides-sass"
   },
   "keywords": [],
   "author": "",
