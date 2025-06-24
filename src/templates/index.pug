@@ -10,21 +10,23 @@ html(lang="en")
     link(rel="stylesheet", href="./main.css")
     title SIGGRAPH 2025 Technical Papers
   body
-    .container
-      //- Page title in a simple jumbotron style
-      .p-5.mb-4.bg-light.rounded-3
-        h1.display-5.fw-bold SIGGRAPH 2025 Technical Papers
+    //- Full-width jumbotron style header
+    header.jumbotron.mb-5
+      .container.text-center
+        h1.display-4.fw-bold SIGGRAPH 2025 Technical Papers
 
+    main.container
       //- Table of contents linking to each session
       if sessions.length
+        h2.mb-3.fw-bold Table of Contents
         nav.mb-5
           ul.list-unstyled
             each session, idx in sessions
               li.mb-1
-                a(href="#session-#{idx + 1}") #{idx + 1}. #{session.name}
+                a(href="#session-" + (idx + 1)) #{idx + 1}. #{session.name}
 
       each session, sidx in sessions
-        h2.session-title.mt-5.mb-4.fw-bold(id="session-#{sidx + 1}")
+        h2.session-title.mt-5.mb-4.fw-bold(id="session-" + (sidx + 1))
           | #{sidx + 1}. #{session.name}
         each paper, idx in session.papers
           .card.mb-4.border-0
@@ -50,3 +52,10 @@ html(lang="en")
                 .col-auto
                   .image-wrapper.rounded-end.m-3
                     img(src="../data/images/" + paper.image_file, alt=paper.title)
+
+    //- Simple footer with source link
+    footer.footer.mt-5
+      .container.text-center
+        p.mb-0
+          | Source:
+          a.ms-1(href="https://s2025.conference-schedule.org/" target="_blank") s2025.conference-schedule.org
