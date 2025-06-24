@@ -20,10 +20,10 @@ pip install -r requirements.txt
 python scrape_siggraph2025.py
 ```
 
-The scraped papers will be saved to `data/papers.json` in JSON format. Each entry
+The scraped papers will be saved to `dist/papers.json` in JSON format. Each entry
 includes the paper's title, authors, session and paper IDs, schedule information,
 and a link to its dedicated presentation page on the SIGGRAPH site. The
-representative images for each paper are downloaded to `data/images/` and the
+representative images for each paper are downloaded to `dist/images/` and the
 JSON file stores both the original image URL and the saved image filename.
 
 ## Building the HTML summary
@@ -35,7 +35,7 @@ npm install
 npm run build
 ```
 
-The generated HTML (`dist/index.html`) references the scraped images under `data/images/` and lists the technical papers grouped by session.
+The generated HTML (`dist/index.html`) references the scraped images under `dist/images/` and lists the technical papers grouped by session.
 
 ## Building slide deck
 
