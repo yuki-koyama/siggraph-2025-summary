@@ -1,0 +1,22 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com" crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet")
+    link(rel="stylesheet", href="./slides.css")
+    title SIGGRAPH 2025 Technical Papers Slides
+  body
+    each session in sessions
+      section.slide.session-title
+        h1= session.name
+      each paper in session.papers
+        section.slide.paper
+          if paper.image_file
+            img.paper-image(src="../data/images/" + paper.image_file, alt=paper.title)
+          h2.paper-title= paper.title
+          p.authors= paper.authors.join(', ')
+          if paper.description
+            p.description= paper.description

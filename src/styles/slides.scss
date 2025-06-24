@@ -1,0 +1,53 @@
+@page {
+  size: 1280px 720px;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.slide {
+  width: 1280px;
+  height: 720px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  page-break-after: always;
+  box-sizing: border-box;
+  padding: 2rem;
+}
+
+.session-title {
+  background: linear-gradient(135deg, #6f42c1, #5c6df2);
+  color: #fff;
+}
+
+.session-title h1 {
+  font-size: 3rem;
+  text-align: center;
+}
+
+.paper-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.authors {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.paper-image {
+  max-width: 80%;
+  max-height: 50%;
+  margin-bottom: 1rem;
+}
+
+.description {
+  text-align: center;
+}
