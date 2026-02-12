@@ -7,13 +7,13 @@ html(lang="en")
     link(rel="preconnect", href="https://fonts.gstatic.com" crossorigin)
     link(href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet")
     link(rel="stylesheet", href="./slides.css")
-    title SIGGRAPH 2025 Technical Papers Slides
+    title= pageTitle + " Slides"
   body
     section.slide.title
-      h1 SIGGRAPH 2025 Technical Papers
+      h1= pageTitle
       if typeof sessionCount !== 'undefined' && typeof paperCount !== 'undefined'
         p.stats #Sessions: #{sessionCount}, #Papers: #{paperCount}
-      p.source Source: #[a.source-link(href="https://s2025.conference-schedule.org/" target="_blank") s2025.conference-schedule.org]
+      p.source Source: #[a.source-link(href=sourceUrl target="_blank") #{sourceLabel}]
     each session, sidx in sessions
       section.slide.session-title
         h1 #{sidx + 1}. #{session.name}

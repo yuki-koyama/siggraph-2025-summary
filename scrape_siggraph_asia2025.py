@@ -14,7 +14,35 @@ EXCLUDE_TITLE_KEYWORDS = (
     "Papers Fast Forward",
     "Technical Papers Town Hall",
     "Technical Papers Closing Session",
+    "Technical Papers Interactive Discussion",
 )
+
+AD_HOC_PAPER_FIXES = {
+    "Implicit Bonded Discrete Element Method with Manifold Optimization": {
+        "authors": [
+            "Jia-Ming Lu",
+            "Geng-Chen Cao",
+            "Chenfeng Li",
+            "Shi-Min Hu",
+        ],
+        "affiliations": [
+            ["Tsinghua University"],
+            ["Tsinghua University"],
+            ["Swansea University Bay Campus"],
+            ["Tsinghua University"],
+        ],
+    },
+    "Reliable Iterative Dynamics: A Versatile Method for Fast and Robust Simulation": {
+        "authors": [
+            "Jia-Ming Lu",
+            "Shi-Min Hu",
+        ],
+        "affiliations": [
+            ["Tsinghua University"],
+            ["Tsinghua University"],
+        ],
+    },
+}
 
 
 def normalize_title(title: str) -> str:
@@ -26,7 +54,13 @@ def normalize_title(title: str) -> str:
 SESSION = requests.Session()
 SESSION.headers.update({"User-Agent": "siggraph-scraper"})
 REQUEST_TIMEOUT = 10
-BASE_URL = "https://s2025.conference-schedule.org/"
+BASE_URL = "https://sa2025.conference-schedule.org/"
+FAST_FORWARD_PRESENTER_CLASS = "technical-papers-fast-forward-presenter"
+
+
+def _is_fast_forward_presenter_descendant(tag) -> bool:
+    """Return True when a tag is nested under fast-forward presenter markup."""
+    return bool(tag.find_parent(class_=FAST_FORWARD_PRESENTER_CLASS))
 
 
 def fetch_page(url: str) -> BeautifulSoup:
@@ -56,6 +90,8 @@ def fetch_paper_details(url: str) -> Tuple[str, str, List[List[str]]]:
 
     affiliations: List[List[str]] = []
     for presenter in soup.find_all("div", class_="presenter-details"):
+        if _is_fast_forward_presenter_descendant(presenter):
+            continue
         inst_links = presenter.find_all(
             "a", attrs={"data-link-type": "presentation.person.institution"}
         )
@@ -118,6 +154,16 @@ def _has_presentation_type(row: BeautifulSoup, keyword: str) -> bool:
     return bool(ptype and keyword in ptype.get_text())
 
 
+def apply_ad_hoc_paper_fixes(papers: List[Dict[str, str]]) -> None:
+    """Apply event-specific manual corrections for known bad source metadata."""
+    for paper in papers:
+        fix = AD_HOC_PAPER_FIXES.get(paper.get("title", ""))
+        if not fix:
+            continue
+        paper["authors"] = fix["authors"]
+        paper["affiliations"] = fix["affiliations"]
+
+
 def parse_snippet(html: str) -> List[Dict[str, str]]:
     """Parse a schedule snippet and return individual technical papers."""
     soup = BeautifulSoup(html, "html.parser")
@@ -166,7 +212,11 @@ def parse_snippet(html: str) -> List[Dict[str, str]]:
         author_links = row.find_all(
             "a", attrs={"data-link-type": lambda x: x and ".person" in x}
         )
-        authors = [normalize_title(a.get_text(strip=True)) for a in author_links]
+        authors = [
+            normalize_title(a.get_text(strip=True))
+            for a in author_links
+            if not _is_fast_forward_presenter_descendant(a)
+        ]
 
         papers.append(
             {
@@ -234,6 +284,7 @@ def scrape_technical_papers(images_dir: str) -> List[Dict[str, str]]:
     """Scrape the schedule site for technical papers."""
     soup = fetch_page(BASE_URL)
     papers = parse_technical_papers(soup)
+    apply_ad_hoc_paper_fixes(papers)
     download_images(papers, images_dir)
     return papers
 
@@ -248,7 +299,7 @@ def save_as_json(data: List[Dict[str, str]], path: str) -> None:
 
 
 if __name__ == "__main__":
-    event_dir = os.path.join("dist", "siggraph-2025")
+    event_dir = os.path.join("dist", "siggraph-asia-2025")
     images_dir = os.path.join(event_dir, "images")
     papers = scrape_technical_papers(images_dir)
     output_path = os.path.join(event_dir, "papers.json")

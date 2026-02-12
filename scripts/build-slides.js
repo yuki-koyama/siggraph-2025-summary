@@ -1,8 +1,13 @@
 const fs = require('fs-extra');
+const path = require('path');
 const pug = require('pug');
+const { EVENTS, getEventFromArgv } = require('./event-config');
 
 async function build() {
-  const data = await fs.readJson('dist/papers.json').catch(() => []);
+  const event = getEventFromArgv(process.argv);
+  const eventConfig = EVENTS[event];
+  const distDir = path.join('dist', event);
+  const data = await fs.readJson(path.join(distDir, 'papers.json')).catch(() => []);
   const sessionsMap = new Map();
   for (const paper of data) {
     const name = paper.session || 'Unknown Session';
@@ -18,10 +23,13 @@ async function build() {
     sessions,
     sessionCount,
     paperCount,
+    pageTitle: eventConfig.pageTitle,
+    sourceUrl: eventConfig.sourceUrl,
+    sourceLabel: eventConfig.sourceLabel,
     pretty: true,
   });
-  await fs.ensureDir('dist');
-  await fs.writeFile('dist/slides.html', html);
+  await fs.ensureDir(distDir);
+  await fs.writeFile(path.join(distDir, 'slides.html'), html);
 }
 
 build().catch(err => {

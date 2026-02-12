@@ -1,0 +1,42 @@
+@use 'slides';
+
+/* SIGGRAPH Asia 2025 has longer abstracts, so use denser typography. */
+.slide {
+  padding: 1.25rem;
+}
+
+.title h1 {
+  font-size: 2.8rem;
+}
+
+.title .stats {
+  font-size: 1.15rem;
+}
+
+.session-title h1 {
+  font-size: 2.4rem;
+}
+
+.paper-title {
+  font-size: 1.45rem;
+  margin-bottom: 0.6rem;
+}
+
+.author-list {
+  margin-bottom: 0.5rem;
+}
+
+.author-list li {
+  font-size: 0.74rem;
+  line-height: 1.12;
+  margin-bottom: 0.1rem;
+}
+
+.author-list li .affiliation {
+  font-size: 0.6rem;
+}
+
+.description {
+  font-size: 0.68rem;
+  line-height: 1.18;
+}

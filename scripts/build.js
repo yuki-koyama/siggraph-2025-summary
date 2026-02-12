@@ -1,8 +1,13 @@
 const fs = require('fs-extra');
+const path = require('path');
 const pug = require('pug');
+const { EVENTS, getEventFromArgv } = require('./event-config');
 
 async function build() {
-  const data = await fs.readJson('dist/papers.json').catch(() => []);
+  const event = getEventFromArgv(process.argv);
+  const eventConfig = EVENTS[event];
+  const distDir = path.join('dist', event);
+  const data = await fs.readJson(path.join(distDir, 'papers.json')).catch(() => []);
   // Group papers by session title
   const sessionsMap = new Map();
   for (const paper of data) {
@@ -16,10 +21,13 @@ async function build() {
   // Render Pug template with pretty formatting so the resulting HTML is more readable
   const html = pug.renderFile('src/templates/index.pug', {
     sessions,
+    pageTitle: eventConfig.pageTitle,
+    sourceUrl: eventConfig.sourceUrl,
+    sourceLabel: eventConfig.sourceLabel,
     pretty: true,
   });
-  await fs.ensureDir('dist');
-  await fs.writeFile('dist/index.html', html);
+  await fs.ensureDir(distDir);
+  await fs.writeFile(path.join(distDir, 'index.html'), html);
 }
 
 build().catch(err => {
