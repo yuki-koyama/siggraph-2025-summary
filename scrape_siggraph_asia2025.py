@@ -96,10 +96,7 @@ def fetch_page(url: str) -> BeautifulSoup:
 def fetch_paper_details(url: str) -> Tuple[str, str, List[List[str]]]:
     """Fetch a paper presentation page and return its description, image URL, and
     author affiliations."""
-    try:
-        soup = fetch_page(url)
-    except requests.RequestException:
-        return "", "", []
+    soup = fetch_page(url)
 
     img_el = soup.find("img", class_="representative-img")
     img_url = urljoin(BASE_URL, img_el.get("src", "")) if img_el else ""
@@ -133,12 +130,9 @@ def _download_image(paper: Dict[str, str], dest_dir: str) -> str:
     filename = f"{paper_id}{ext}"
     path = os.path.join(dest_dir, filename)
 
-    try:
-        resp = _get_with_retry(url)
-        with open(path, "wb") as f:
-            f.write(resp.content)
-    except requests.RequestException:
-        return ""
+    resp = _get_with_retry(url)
+    with open(path, "wb") as f:
+        f.write(resp.content)
     return filename
 
 
@@ -275,14 +269,10 @@ def parse_technical_papers(base_soup: BeautifulSoup) -> List[Dict[str, str]]:
     papers: List[Dict[str, str]] = []
     links = parse_snippet_links(base_soup)
     for link in tqdm(links, desc="Fetching schedule snippets"):
-        try:
-            resp = _get_with_retry(link)
-            # Snippet responses omit the charset and default to ISO-8859-1; fix
-            # it so we do not get stray characters in titles.
-            resp.encoding = "utf-8"
-        except requests.RequestException:
-            # Skip snippets that fail to load
-            continue
+        resp = _get_with_retry(link)
+        # Snippet responses omit the charset and default to ISO-8859-1; fix
+        # it so we do not get stray characters in titles.
+        resp.encoding = "utf-8"
         papers.extend(parse_snippet(resp.text))
         time.sleep(0.1)
 
