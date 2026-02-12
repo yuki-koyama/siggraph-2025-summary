@@ -1,5 +1,6 @@
 import json
 import os
+import random
 from urllib.parse import urljoin, urlparse, parse_qs
 
 import requests
@@ -56,6 +57,9 @@ SESSION.headers.update({"User-Agent": "siggraph-scraper"})
 REQUEST_TIMEOUT = 10
 BASE_URL = "https://sa2025.conference-schedule.org/"
 FAST_FORWARD_PRESENTER_CLASS = "technical-papers-fast-forward-presenter"
+RETRY_ATTEMPTS = 4
+RETRY_SLEEP_MIN_SECONDS = 1.0
+RETRY_SLEEP_MAX_SECONDS = 4.0
 
 
 def _is_fast_forward_presenter_descendant(tag) -> bool:
@@ -63,10 +67,25 @@ def _is_fast_forward_presenter_descendant(tag) -> bool:
     return bool(tag.find_parent(class_=FAST_FORWARD_PRESENTER_CLASS))
 
 
+def _get_with_retry(url: str) -> requests.Response:
+    """GET with randomized backoff retries for transient failures."""
+    last_exc = None
+    for attempt in range(RETRY_ATTEMPTS):
+        try:
+            resp = SESSION.get(url, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            return resp
+        except requests.RequestException as exc:
+            last_exc = exc
+            if attempt == RETRY_ATTEMPTS - 1:
+                break
+            time.sleep(random.uniform(RETRY_SLEEP_MIN_SECONDS, RETRY_SLEEP_MAX_SECONDS))
+    raise last_exc
+
+
 def fetch_page(url: str) -> BeautifulSoup:
     """Fetch a page and return its BeautifulSoup object."""
-    resp = SESSION.get(url, timeout=REQUEST_TIMEOUT)
-    resp.raise_for_status()
+    resp = _get_with_retry(url)
     # Snippet pages are served without an explicit charset and default to
     # ISO-8859-1 in ``requests``. Force UTF-8 so characters like en-dashes do
     # not get decoded as "\xc2" (displayed as "\xc2").
@@ -115,8 +134,7 @@ def _download_image(paper: Dict[str, str], dest_dir: str) -> str:
     path = os.path.join(dest_dir, filename)
 
     try:
-        resp = SESSION.get(url, timeout=REQUEST_TIMEOUT)
-        resp.raise_for_status()
+        resp = _get_with_retry(url)
         with open(path, "wb") as f:
             f.write(resp.content)
     except requests.RequestException:
@@ -258,12 +276,11 @@ def parse_technical_papers(base_soup: BeautifulSoup) -> List[Dict[str, str]]:
     links = parse_snippet_links(base_soup)
     for link in tqdm(links, desc="Fetching schedule snippets"):
         try:
-            resp = SESSION.get(link, timeout=REQUEST_TIMEOUT)
-            resp.raise_for_status()
+            resp = _get_with_retry(link)
             # Snippet responses omit the charset and default to ISO-8859-1; fix
             # it so we do not get stray characters in titles.
             resp.encoding = "utf-8"
-        except requests.HTTPError:
+        except requests.RequestException:
             # Skip snippets that fail to load
             continue
         papers.extend(parse_snippet(resp.text))
