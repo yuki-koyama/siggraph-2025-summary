@@ -1,3 +1,23 @@
+mixin paperSlide(paper)
+  section.slide.paper(class=[paper.image_file ? '' : 'no-image', paper.authors.length > 12 ? 'dense' : '', paper.is_deferred ? 'deferred-paper' : ''])
+    if paper.image_file
+      .image-column
+        img.paper-image(src="images/" + paper.image_file, alt=paper.title)
+    .text-column
+      if paper.paper_type_label
+        span.paper-tag(class='paper-tag--' + paper.paper_type)= paper.paper_type_label
+      h2.paper-title= paper.title
+      ul.author-list
+        - for(var i = 0; i < paper.authors.length; i++) {
+          li
+            = paper.authors[i]
+            if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
+              small.affiliation.text-body-secondary
+                |  (#{paper.affiliations[i].join(', ')})
+        - }
+      if paper.description
+        p.description= paper.description
+
 doctype html
 html(lang="en")
   head
@@ -11,26 +31,20 @@ html(lang="en")
   body
     section.slide.title
       h1= pageTitle
-      if typeof sessionCount !== 'undefined' && typeof paperCount !== 'undefined'
-        p.stats #Sessions: #{sessionCount}, #Papers: #{paperCount}
+      if typeof sessionCount !== 'undefined' && typeof presentedPaperCount !== 'undefined'
+        p.stats #Sessions: #{sessionCount}, #Presented Papers: #{presentedPaperCount}
+        if deferredPaperCount
+          p.deferred-stats #Deferred Papers: #{deferredPaperCount}, #Total Publications: #{totalPaperCount}
       p.source Source: #[a.source-link(href=sourceUrl target="_blank") #{sourceLabel}]
     each session, sidx in sessions
       section.slide.session-title
         h1 #{sidx + 1}. #{session.name}
       each paper in session.papers
-        section.slide.paper(class=[paper.image_file ? '' : 'no-image', paper.authors.length > 12 ? 'dense' : ''])
-          if paper.image_file
-            .image-column
-              img.paper-image(src="images/" + paper.image_file, alt=paper.title)
-          .text-column
-            h2.paper-title= paper.title
-            ul.author-list
-              - for(var i = 0; i < paper.authors.length; i++) {
-                li
-                  = paper.authors[i]
-                  if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
-                    small.affiliation.text-body-secondary
-                      |  (#{paper.affiliations[i].join(', ')})
-              - }
-            if paper.description
-              p.description= paper.description
+        +paperSlide(paper)
+    if deferredPapers.length
+      section.slide.session-title.deferred-title
+        h1 Deferred Paper Presentations
+        if deferredPolicyUrl
+          p #[a.source-link(href=deferredPolicyUrl target="_blank") Deferred Paper Presentation Policy]
+      each paper in deferredPapers
+        +paperSlide(paper)

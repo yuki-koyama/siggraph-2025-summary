@@ -1,3 +1,30 @@
+mixin paperCard(paper)
+  .card.mb-4.border-0(class=paper.is_deferred ? 'deferred-paper' : '')
+    .row.g-0
+      .col
+        .card-body
+          if paper.paper_type_label
+            span.paper-tag(class='paper-tag--' + paper.paper_type)= paper.paper_type_label
+          h5.card-title.fw-bold= paper.title
+          ul.author-list.list-unstyled.card-text.mb-2
+            - for(var i = 0; i < paper.authors.length; i++) {
+              li
+                | #{paper.authors[i]}
+                if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
+                  small.text-body-secondary.ms-1
+                    | (#{paper.affiliations[i].join(', ')})
+            - }
+          if paper.description
+            p.card-text= paper.description
+          p.card-text
+            small.text-body-secondary
+              | Source:
+              a.ms-1(href=paper.url target="_blank") Link
+      if paper.image_file
+        .col-auto
+          .image-wrapper.rounded-end.m-3
+            img(src="images/" + paper.image_file, alt=paper.title)
+
 doctype html
 html(lang="en")
   head
@@ -10,13 +37,22 @@ html(lang="en")
     link(rel="stylesheet", href="./main.css")
     title= pageTitle
   body
-    //- Full-width jumbotron style header
     header.jumbotron.mb-5
       .container.text-center
         h1.display-4.fw-bold= pageTitle
 
     main.container
-      //- Table of contents linking to each session
+      if tagCounts.length
+        section.paper-summary.mb-5
+          h2.mb-3.fw-bold Paper Classification
+          p.mb-3
+            | This catalog contains #{totalPaperCount} papers: #{presentedPaperCount} presented at SIGGRAPH 2026 and #{deferredPaperCount} whose presentations were deferred to SIGGRAPH Asia 2026.
+          ul.tag-summary.list-unstyled.mb-0
+            each item in tagCounts
+              li
+                span.paper-tag(class='paper-tag--' + item.tag)= item.label
+                span.tag-count #{item.count}
+
       if sessions.length
         h2.mb-3.fw-bold Table of Contents
         nav.mb-5
@@ -24,36 +60,26 @@ html(lang="en")
             each session, idx in sessions
               li.mb-1
                 a(href="#session-" + (idx + 1)) #{idx + 1}. #{session.name}
+            if deferredPapers.length
+              li.mb-1.mt-2
+                a(href="#deferred-papers") Deferred Paper Presentations
 
       each session, sidx in sessions
         h2.session-title.mt-5.mb-4.fw-bold(id="session-" + (sidx + 1))
           | #{sidx + 1}. #{session.name}
-        each paper, idx in session.papers
-          .card.mb-4.border-0
-            .row.g-0
-              .col
-                .card-body
-                  h5.card-title.fw-bold= paper.title
-                  ul.author-list.list-unstyled.card-text.mb-2
-                    - for(var i = 0; i < paper.authors.length; i++) {
-                      li
-                        | #{paper.authors[i]}
-                        if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
-                          small.text-body-secondary.ms-1
-                            | (#{paper.affiliations[i].join(', ')})
-                    - }
-                  if paper.description
-                    p.card-text= paper.description
-                  p.card-text
-                    small.text-body-secondary
-                      | Source:
-                      a.ms-1(href=paper.url target="_blank") Link
-              if paper.image_file
-                .col-auto
-                  .image-wrapper.rounded-end.m-3
-                    img(src="images/" + paper.image_file, alt=paper.title)
+        each paper in session.papers
+          +paperCard(paper)
 
-    //- Simple footer with source link
+      if deferredPapers.length
+        section.deferred-section(id="deferred-papers")
+          h2.session-title.mt-5.mb-3.fw-bold Deferred Paper Presentations
+          if deferredPolicyUrl
+            p.mb-4 These papers were published with SIGGRAPH 2026, but their in-person presentations were deferred to SIGGRAPH Asia 2026 under the #[a(href=deferredPolicyUrl target="_blank") Deferred Paper Presentation Policy].
+          else
+            p.mb-4 These papers were published with SIGGRAPH 2026, but their in-person presentations were deferred to SIGGRAPH Asia 2026.
+          each paper in deferredPapers
+            +paperCard(paper)
+
     footer.footer.mt-5
       .container.text-center
         p.mb-0

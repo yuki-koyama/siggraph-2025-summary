@@ -11,6 +11,56 @@ body {
 
 .session-title {}
 
+.paper-summary {
+  background: #fff;
+  border-left: 0.35rem solid #6f42c1;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.tag-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+
+.tag-summary li {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.tag-count {
+  font-weight: 700;
+}
+
+.paper-tag {
+  display: inline-block;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.65rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.paper-tag--conference { background: #0d6efd; }
+.paper-tag--journal { background: #6f42c1; }
+.paper-tag--invited-tog { background: #198754; }
+.paper-tag--conference-deferred { background: #b45309; }
+.paper-tag--journal-deferred { background: #b42318; }
+
+.deferred-section {
+  border-top: 0.25rem solid #dee2e6;
+  margin-top: 5rem;
+  padding-top: 1rem;
+}
+
+.deferred-paper {
+  background: #fffaf0;
+}
+
 .image-wrapper {
   background: #eee;
   display: flex;

@@ -8,6 +8,7 @@ const EVENTS = {
     pageTitle: 'SIGGRAPH 2026 Technical Papers',
     sourceUrl: 'https://s2026.conference-schedule.org/',
     sourceLabel: 's2026.conference-schedule.org',
+    deferredPolicyUrl: 'https://www.siggraph.org/siggraph-events/conferences/deferred-paper-presentation/',
   },
   'siggraph-asia-2025': {
     pageTitle: 'SIGGRAPH Asia 2025 Technical Papers',

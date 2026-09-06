@@ -50,6 +50,12 @@ body {
   text-align: center;
 }
 
+.title .deferred-stats {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 0;
+}
+
 .title h1 {
   font-size: 3.5rem;
   text-align: center;
@@ -87,6 +93,39 @@ body {
   font-weight: bold;
   text-align: left;
   margin-bottom: 1rem;
+}
+
+.paper-tag {
+  align-self: flex-start;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0.7rem;
+}
+
+.paper-tag--conference { background: #0d6efd; }
+.paper-tag--journal { background: #6f42c1; }
+.paper-tag--invited-tog { background: #198754; }
+.paper-tag--conference-deferred { background: #b45309; }
+.paper-tag--journal-deferred { background: #b42318; }
+
+.deferred-title {
+  background: linear-gradient(135deg, #7c2d12, #b45309);
+}
+
+.deferred-title p {
+  font-size: 1.1rem;
+}
+
+.deferred-title .source-link {
+  color: #fef3c7;
+}
+
+.paper.deferred-paper {
+  background: #fffaf0;
 }
 
 .author-list {

@@ -9,6 +9,8 @@ from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 import time
 
+from siggraph2026_classification import classify_siggraph2026_papers
+
 # Session title keywords to exclude even though they are labeled as Technical Papers
 EXCLUDE_TITLE_KEYWORDS = (
     "Papers Fast Forward",
@@ -235,7 +237,7 @@ def scrape_technical_papers(images_dir: str) -> List[Dict[str, str]]:
     soup = fetch_page(BASE_URL)
     papers = parse_technical_papers(soup)
     download_images(papers, images_dir)
-    return papers
+    return classify_siggraph2026_papers(papers, SESSION)
 
 
 def save_as_json(data: List[Dict[str, str]], path: str) -> None:
