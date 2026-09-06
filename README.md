@@ -51,10 +51,6 @@ deferred papers are shown in a separate section, for a complete publication cata
 of 363 papers. The scraper checks all category counts and stops with an error if the
 sources no longer reconcile.
 
-This summary is an independent SIGGRAPH paper catalog. It is not specific to any
-study group, so generated pages and slides should describe publication and
-presentation status only.
-
 ### SIGGRAPH 2026 data reconciliation
 
 The five tags are mutually exclusive. Current verified counts are:
