@@ -1,10 +1,11 @@
-# SIGGRAPH 2025 / SIGGRAPH Asia 2025 Summary
+# SIGGRAPH 2025 / 2026 / SIGGRAPH Asia 2025 Summary
 
 This repository contains a scraper and static builders for:
 - SIGGRAPH 2025 (`siggraph-2025`)
+- SIGGRAPH 2026 (`siggraph-2026`)
 - SIGGRAPH Asia 2025 (`siggraph-asia-2025`)
 
-The scripts `scrape_siggraph2025.py` and `scrape_siggraph_asia2025.py` download the official schedule and extract
+The scripts `scrape_siggraph2025.py`, `scrape_siggraph2026.py`, and `scrape_siggraph_asia2025.py` download the official schedule and extract
 individual **Technical Papers** by parsing daily schedule snippets. The parser
 collects papers for each technical paper session and excludes non-paper sessions
 such as "Papers Fast Forward", "Technical Papers Town Hall", and
@@ -21,6 +22,9 @@ pip install -r requirements.txt
 ```bash
 # SIGGRAPH 2025
 python scrape_siggraph2025.py
+
+# SIGGRAPH 2026
+python scrape_siggraph2026.py
 
 # SIGGRAPH Asia 2025
 python scrape_siggraph_asia2025.py
@@ -42,6 +46,9 @@ npm install
 # SIGGRAPH 2025
 npm run build
 
+# SIGGRAPH 2026
+npm run build:2026
+
 # SIGGRAPH Asia 2025
 npm run build:asia
 
@@ -51,6 +58,7 @@ npm run build:all
 
 Generated HTML files:
 - `dist/siggraph-2025/index.html`
+- `dist/siggraph-2026/index.html`
 - `dist/siggraph-asia-2025/index.html`
 
 ## Building slide deck
@@ -60,6 +68,9 @@ You can also generate a slide-style HTML file. The deck begins with a title slid
 ```bash
 # SIGGRAPH 2025
 npm run build:slides
+
+# SIGGRAPH 2026
+npm run build:slides:2026
 
 # SIGGRAPH Asia 2025
 npm run build:slides:asia
@@ -74,6 +85,9 @@ To automatically save a PDF version of the slides, run:
 ```bash
 # SIGGRAPH 2025
 npm run build:slides-pdf
+
+# SIGGRAPH 2026
+npm run build:slides-pdf:2026
 
 # SIGGRAPH Asia 2025
 npm run build:slides-pdf:asia

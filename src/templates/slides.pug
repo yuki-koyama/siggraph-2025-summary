@@ -18,7 +18,7 @@ html(lang="en")
       section.slide.session-title
         h1 #{sidx + 1}. #{session.name}
       each paper in session.papers
-        section.slide.paper(class=paper.image_file ? '' : 'no-image')
+        section.slide.paper(class=[paper.image_file ? '' : 'no-image', paper.authors.length > 12 ? 'dense' : ''])
           if paper.image_file
             .image-column
               img.paper-image(src="images/" + paper.image_file, alt=paper.title)
@@ -27,10 +27,10 @@ html(lang="en")
             ul.author-list
               - for(var i = 0; i < paper.authors.length; i++) {
                 li
-                  = paper.authors[i] + ' '
+                  = paper.authors[i]
                   if paper.affiliations && paper.affiliations[i] && paper.affiliations[i].length
                     small.affiliation.text-body-secondary
-                      | (#{paper.affiliations[i].join(', ')})
+                      |  (#{paper.affiliations[i].join(', ')})
               - }
             if paper.description
               p.description= paper.description

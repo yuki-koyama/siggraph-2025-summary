@@ -128,3 +128,28 @@ body {
 .description {
   text-align: left;
 }
+
+.paper.dense {
+  .paper-title {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .author-list {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .author-list li {
+    margin-bottom: 0.1rem;
+  }
+
+  .author-list li .affiliation,
+  .description {
+    font-size: 0.75rem;
+  }
+
+  .description {
+    margin-bottom: 0;
+  }
+}

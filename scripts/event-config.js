@@ -4,6 +4,11 @@ const EVENTS = {
     sourceUrl: 'https://s2025.conference-schedule.org/',
     sourceLabel: 's2025.conference-schedule.org',
   },
+  'siggraph-2026': {
+    pageTitle: 'SIGGRAPH 2026 Technical Papers',
+    sourceUrl: 'https://s2026.conference-schedule.org/',
+    sourceLabel: 's2026.conference-schedule.org',
+  },
   'siggraph-asia-2025': {
     pageTitle: 'SIGGRAPH Asia 2025 Technical Papers',
     sourceUrl: 'https://sa2025.conference-schedule.org/',
